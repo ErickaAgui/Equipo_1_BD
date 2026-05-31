@@ -1,15 +1,15 @@
-/* ============================================================
+/* 
    INSERTS ADAPTADOS - RESTAURANTE CON MENÚ OLIVE GARDEN
    Base: DDL PostgreSQL Restaurante
    Ejecutar DESPUÉS de crear las tablas.
-   ============================================================ */
+    */
 
 BEGIN;
 
-/* ============================================================
+/* 
    1) EMPLEADOS
    Pilotos de F1 usados como empleados del restaurante.
-   ============================================================ */
+ */
 
 INSERT INTO empleado
 (num_empleado, nombre, ap_pat, ap_mat, edad, rfc, calle, numero, colonia, cp, estado, sueldo, fecha_nac, foto)
@@ -37,9 +37,9 @@ VALUES
 (21, 'Sergio',   'Perez',      'Cadillac',36,'PER900126MX1', 'Curva4', '11', 'SantaFe',          '01210', 'CDMX', 47000.00, '1990-01-26', 'sergio_perez.jpg'),
 (22, 'Valtteri', 'Bottas',     'Cadillac',36,'BOT890828MX2', 'Curva5', '77', 'Lindavista',       '07300', 'CDMX', 45000.00, '1989-08-28', 'valtteri_bottas.jpg');
 
-/* ============================================================
+/* 
    2) TELÉFONOS DE EMPLEADOS
-   ============================================================ */
+ */
 
 INSERT INTO telefono_empleado (num_empleado, telefono) VALUES
 (1,'5551000001'), (2,'5551000002'), (3,'5551000003'), (4,'5551000004'),
@@ -49,12 +49,12 @@ INSERT INTO telefono_empleado (num_empleado, telefono) VALUES
 (17,'5551000017'), (18,'5551000018'), (19,'5551000019'), (20,'5551000020'),
 (21,'5551000021'), (22,'5551000022');
 
-/* ============================================================
+/* 
    3) SUBTIPOS DE EMPLEADO
    Especialización parcial y traslapada.
    Se dividen los pilotos entre meseros, cocineros y administrativos y 
    algunos se repiten para mostrar traslape.
-   ============================================================ */
+    */
 
 -------1. Registro de los meseros
 INSERT INTO mesero (num_empleado) VALUES
@@ -135,9 +135,9 @@ INSERT INTO administrativo (num_empleado, rol) VALUES
 (22, 'Facturación'),
 (8,  'Supervisor de cocina');
 
-/* ============================================================
+/* 
    4) DEPENDIENTES
-   ============================================================ */
+    */
 
 
 INSERT INTO dependiente (num_empleado, id_dependiente, nombre, ap_pat, parentesco, curp) VALUES
@@ -148,9 +148,9 @@ INSERT INTO dependiente (num_empleado, id_dependiente, nombre, ap_pat, parentesc
 (21, 1, 'Antonio',  'Pérez',      'Padre',   'PEAT010101HDFRRR05');
 
 
-/* ============================================================
+/* 
    5) CLIENTES
-   ============================================================ */
+   */
 
 -- Primero: Registramos los datos generales en la tabla CLIENTE
 INSERT INTO cliente
@@ -208,9 +208,9 @@ VALUES
 (18, 'McLaren Racing Limited S.A.'),
 (19, 'Neon Databases México S. de R.L.'),
 (20, 'Universidad Nacional Autónoma de México');
-/* ============================================================
+/* 
    6) CATEGORÍAS DEL MENÚ
-   ============================================================ */
+   */
 
 INSERT INTO categoria (id_categoria, nombre, descripcion) VALUES
 (1,  'Antipasti',        'Entradas para compartir'),
@@ -225,10 +225,10 @@ INSERT INTO categoria (id_categoria, nombre, descripcion) VALUES
 (10, 'Cervezas',         'Cervezas nacionales, premium y sin alcohol'),
 (11, 'Vinos',            'Vinos por copa o botella');
 
-/* ============================================================
+/* 
    7) PRODUCTOS DEL MENÚ
    tipo_producto: PLATILLO o BEBIDA
-   ============================================================ */
+   */
 
 INSERT INTO producto
 (id_producto, id_categoria, nombre, descripcion, receta, precio, disponibilidad, tipo_producto)
@@ -270,10 +270,10 @@ VALUES
 (35, 11,'Bacco L.A. Cetto Copa', 'Vino Lambrusco por copa.', NULL, 125.00, TRUE, 'BEBIDA'),
 (36, 11,'Protos Verdejo Copa', 'Vino blanco Verdejo por copa.', NULL, 209.00, TRUE, 'BEBIDA');
 
-/* ============================================================
+/* 
    8) ÓRDENES
    Solo pueden atenderlas empleados que estén en MESERO.
-   ============================================================ */
+   */
 
 INSERT INTO orden (folio, num_mesero, fecha, total_pagar) VALUES
 ('ORD-001', 1,  '2025-01-15 14:20:00', 0),
@@ -292,13 +292,13 @@ INSERT INTO orden (folio, num_mesero, fecha, total_pagar) VALUES
 ('ORD-014', 6,  '2025-12-12 19:10:00', 0),
 ('ORD-015', 21, '2025-12-20 21:45:00', 0);
 
-/* ============================================================
+/* 
    9) DETALLE_ORDEN
    El subtotal_prod NO se inserta manualmente, 
    lo calcula automáticamente el trigger fn_calcular_subtotal().
    Después de cada INSERT, el trigger fn_actualizar_totalOrden()
    actualiza automáticamente orden.total_pagar.
-   ============================================================ */
+ */
 
 INSERT INTO detalle_orden (folio, id_producto, cant_prod) VALUES
 ('ORD-001', 1, 1), ('ORD-001', 8, 2), ('ORD-001', 25, 2),
@@ -317,7 +317,7 @@ INSERT INTO detalle_orden (folio, id_producto, cant_prod) VALUES
 ('ORD-014', 16, 2), ('ORD-014', 21, 1), ('ORD-014', 35, 3),
 ('ORD-015', 17, 1), ('ORD-015', 15, 1), ('ORD-015', 24, 2), ('ORD-015', 33, 2);
 
-/* ============================================================
+/*
    10) PRODUCTOS NO DISPONIBLES
    Se actualiza la disponibilidad DESPUÉS de insertar detalle_orden.
    Así el trigger puede calcular correctamente subtotal_prod y total_pagar
@@ -325,17 +325,17 @@ INSERT INTO detalle_orden (folio, id_producto, cant_prod) VALUES
 
    Productos marcados como no disponibles:
    1, 5, 7, 9 y 11.
-   ============================================================ */
+  */
 
 UPDATE producto
 SET disponibilidad = FALSE
 WHERE id_producto IN (1, 5, 7, 9, 11);
 
 
-/* ============================================================
+/* 
    11) PAGOS
    Puede pagar una sola persona o dividirse la cuenta entre clientes.
-   ============================================================ */
+ */
 
 INSERT INTO pago (folio, id_cliente, porcentaje_pago, monto_pago) VALUES
 ('ORD-001', 1, 100.00, 801.00),
@@ -354,10 +354,10 @@ INSERT INTO pago (folio, id_cliente, porcentaje_pago, monto_pago) VALUES
 ('ORD-014', 7,  70.00, 1148.00), ('ORD-014', 1, 30.00, 492.00),
 ('ORD-015', 2,  50.00, 683.00), ('ORD-015', 3, 50.00, 683.00);
 
-/* ============================================================
+/* 
    12) FACTURAS
    Cada factura referencia un pago existente: (folio, id_cliente).
-   ============================================================ */
+ */
 
 INSERT INTO factura (id_factura, folio, id_cliente, fecha_emision) VALUES
 (1, 'ORD-001', 1,  '2025-01-15 15:00:00'),
@@ -372,9 +372,9 @@ INSERT INTO factura (id_factura, folio, id_cliente, fecha_emision) VALUES
 (10,'ORD-014', 7,  '2025-12-12 20:05:00'),
 (11,'ORD-015', 2,  '2025-12-20 22:10:00');
 
-/* ============================================================
+/* 
    13) VERIFICACIÓN RÁPIDA
-   ============================================================ */
+    */
 
 SELECT 'empleado' AS tabla, COUNT(*) AS total FROM empleado
 UNION ALL SELECT 'telefono_empleado', COUNT(*) FROM telefono_empleado
