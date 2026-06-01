@@ -129,7 +129,7 @@ BEGIN
     END IF;
 
     -- Si no se proporciona fecha de fin, se toma todo el día de la fecha inicial
-    IF fecha_fin_p IS NULL THEN
+    IF p_fecha_fin IS NULL THEN
         p_fecha_fin := p_fecha_inicio + INTERVAL '1 day';
     END IF;
 
