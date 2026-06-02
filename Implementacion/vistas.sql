@@ -43,7 +43,7 @@ SELECT
 
     c.id_cliente,
     c.rfc, 
-    pm.razon_social,
+    COALESCE(pm.razon_social, 'No aplica') AS razon_social,
 
     COALESCE(
         pm.razon_social, 
