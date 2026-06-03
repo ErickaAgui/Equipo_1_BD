@@ -130,9 +130,15 @@ BEGIN
         RAISE EXCEPTION 'El número de empleado % no corresponde a un mesero.', p_num_empleado;
     END IF;
 
+<<<<<<< HEAD
     -- Si no se proporciona fecha de fin, se toma la misma fecha y hora de inicio
     IF p_fecha_fin IS NULL THEN
         p_fecha_fin := p_fecha_inicio;
+=======
+    -- Si no se proporciona fecha de fin, se toma todo el día de la fecha inicial
+    IF p_fecha_fin IS NULL THEN
+        p_fecha_fin := p_fecha_inicio + INTERVAL '1 day';
+>>>>>>> 0148d7a76adfb3ffaef0c99eb5ede32ce32bc158
     END IF;
 
     -- Si sí es mesero, se cuentan sus órdenes dentro del intervalo de fecha y hora definido
